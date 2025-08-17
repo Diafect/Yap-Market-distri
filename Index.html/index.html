@@ -1,1 +1,48 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yap Market Distribution</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    h1 { color: #333; }
+    .stats { margin-top: 20px; }
+    .stat { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>Yap Market Reward Distribution</h1>
+<div class="stats" id="stats">Loading...</div>
+
+<script>
+async function fetchDistribution() {
+  const url = "/api/distribution"; // 👈 we’ll call our own backend
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to fetch data");
+
+    const data = await response.json();
+
+    document.getElementById("stats").innerHTML = `
+      <div class="stat"><strong>Total Rewards Distributed:</strong> ${data.totalRewardsDistributed} ${data.currency}</div>
+      <div class="stat"><strong>Total Yappers Onboarded:</strong> ${data.totalYappersOnboarded}</div>
+      <div class="stat"><strong>Campaigns:</strong></div>
+      <ul>
+        <li>Live: ${data.campaigns.live}</li>
+        <li>Completed: ${data.campaigns.completed}</li>
+        <li>Total: ${data.campaigns.total}</li>
+      </ul>
+    `;
+  } catch (error) {
+    document.getElementById("stats").innerHTML = `Error: ${error.message}`;
+  }
+}
+
+fetchDistribution();
+</script>
+</body>
+</html>
